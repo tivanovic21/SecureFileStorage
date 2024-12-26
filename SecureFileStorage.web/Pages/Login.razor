@@ -1,0 +1,70 @@
+@page "/login"
+@using System.Net.Http.Json
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string? message = null;
+
+    private async Task HandleLogin() {
+        message = null;
+        try {
+            var response = await Http.PostAsJsonAsync("api/users/login", loginModel);
+            if (response.IsSuccessStatusCode) {
+                message = "Prijava uspešna!";
+                loginModel = new LoginModel();
+                Navigation.NavigateTo("/");  // Redirect to "Početna" (Home) after successful login
+            } else {
+                message = "Prijava nije uspela. " + await response.Content.ReadAsStringAsync();
+            }
+        } catch (Exception ex) {
+            message = $"Greška prilikom prijave: {ex.Message.ToLower()}";
+        }
+    }
+
+    public class LoginModel {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4 mt-5">
+                <h3 class="card-title text-center">Prijavi se</h3>
+
+                @if (message != null)
+                {
+                    <div class="alert-danger alert text-center">@message</div>
+                }
+
+                <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="password">Lozinka</label>
+                        <InputText id="password" class="form-control" type="password" @bind-Value="loginModel.Password" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary btn-block">Prijavi se</button>
+                    </div>
+                </EditForm>
+
+                <div class="mt-3 d-flex justify-content-center align-items-center">
+                    <span class="d-inline-flex align-items-center">
+                        Nemaš račun? <NavLink class="btn btn-link ms-2" href="register">Registriraj se ovdje!</NavLink>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

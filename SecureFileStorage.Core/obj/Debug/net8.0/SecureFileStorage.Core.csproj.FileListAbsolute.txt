@@ -1,0 +1,12 @@
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/bin/Debug/net8.0/SecureFileStorage.Core.deps.json
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/bin/Debug/net8.0/SecureFileStorage.Core.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/bin/Debug/net8.0/SecureFileStorage.Core.pdb
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.AssemblyInfoInputs.cache
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.AssemblyInfo.cs
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.csproj.CoreCompileInputs.cache
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/refint/SecureFileStorage.Core.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.pdb
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/ref/SecureFileStorage.Core.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.sourcelink.json

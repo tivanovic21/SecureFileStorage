@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureFileStorage.Web", "SecureFileStorage.Web\SecureFileStorage.Web.csproj", "{ADC7E905-4306-4A92-AC78-C6A7F491458D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureFileStorage.Core", "SecureFileStorage.Core\SecureFileStorage.Core.csproj", "{D19E9D88-E63B-418B-B6E6-FC93040BD268}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureFileStorage.Infrastructure", "SecureFileStorage.Infrastructure\SecureFileStorage.Infrastructure.csproj", "{ED874444-A85A-48EF-AE8E-AAA12A405E1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADC7E905-4306-4A92-AC78-C6A7F491458D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC7E905-4306-4A92-AC78-C6A7F491458D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC7E905-4306-4A92-AC78-C6A7F491458D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC7E905-4306-4A92-AC78-C6A7F491458D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D19E9D88-E63B-418B-B6E6-FC93040BD268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D19E9D88-E63B-418B-B6E6-FC93040BD268}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D19E9D88-E63B-418B-B6E6-FC93040BD268}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D19E9D88-E63B-418B-B6E6-FC93040BD268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED874444-A85A-48EF-AE8E-AAA12A405E1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED874444-A85A-48EF-AE8E-AAA12A405E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED874444-A85A-48EF-AE8E-AAA12A405E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED874444-A85A-48EF-AE8E-AAA12A405E1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
