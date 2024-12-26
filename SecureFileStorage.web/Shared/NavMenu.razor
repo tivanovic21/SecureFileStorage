@@ -1,16 +1,16 @@
 ﻿@inject IJSRuntime JSRuntime
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">SecureFileStorage.Web</a>
+        <a class="navbar-brand" href="">Secure File Storage</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+<div class="@NavMenuCssClass nav-scrollable collapse" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         @if (isAuthenticated)
         {
@@ -39,12 +39,23 @@
 @code {
     private bool isAuthenticated;
 
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await CheckAuthenticationState();
         }
+    }
+
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        await CheckAuthenticationState();
+        StateHasChanged();
     }
 
     private async Task CheckAuthenticationState()
@@ -57,7 +68,7 @@
     {
         JSRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
         isAuthenticated = false;
-        Navigation.NavigateTo("login");
+        NavigationManager.NavigateTo("login");
     }
 
     private bool collapseNavMenu = true;
