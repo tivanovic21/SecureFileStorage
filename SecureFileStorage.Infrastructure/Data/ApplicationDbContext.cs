@@ -10,17 +10,25 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<User>? User { get; set; }
+    public DbSet<UserType>? UserType { get; set; }
     public DbSet<Core.Entities.File>? File { get; set; }
     public DbSet<Core.Entities.FileAccess>? FileAccess { get; set; }
-    public DbSet<ActivityLog>? ActivityLogs { get; set; }
+    public DbSet<ActivityLog>? ActivityLog { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Core.Entities.FileAccess>()
-            .HasKey(fa => new { fa.FileId, fa.UserId });
-
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+
+        modelBuilder.Entity<Core.Entities.FileAccess>()
+            .HasKey(fa => new { fa.FileId, fa.UserEmail });
+
+        modelBuilder.Entity<Core.Entities.FileAccess>()
+            .HasOne(fa => fa.User)
+            .WithMany(u => u.FileAccesses)
+            .HasPrincipalKey(u => new { u.Id, u.Email })
+            .HasForeignKey(fa => new { fa.UserId, fa.UserEmail })
+            .IsRequired(false);
     }
 }

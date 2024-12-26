@@ -1,9 +1,16 @@
+CREATE TABLE UserType (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE User (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
     passwordHash TEXT NOT NULL,
     createdAt TEXT NOT NULL,
-    lastLogin TEXT
+    lastLogin TEXT,
+    userTypeId INTEGER NOT NULL,
+    FOREIGN KEY (id) REFERENCES UserType(id) ON DELETE CASCADE
 );
 
 CREATE TABLE File (
@@ -19,15 +26,16 @@ CREATE TABLE File (
 
 CREATE TABLE FileAccess (
     fileId INTEGER NOT NULL,
-    userId INTEGER NOT NULL,
+    userId INTEGER,
+    userEmail TEXT NOT NULL,
     accessLevel TEXT,
     grantedAt TEXT NOT NULL,
-    PRIMARY KEY (fileId, userId),
+    PRIMARY KEY (fileId, userEmail),
     FOREIGN KEY (fileId) REFERENCES File(id) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE
 );
 
-CREATE TABLE ActivityLogs (
+CREATE TABLE ActivityLog (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INTEGER,
     fileId INTEGER,

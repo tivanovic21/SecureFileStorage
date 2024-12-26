@@ -1,6 +1,8 @@
 @page "/register"
 @using System.Net.Http.Json
 @inject HttpClient Http
+@inject NavigationManager Navigation
+
 @code {
     private RegistrationModel registrationModel = new RegistrationModel();
     private string? message = null;
@@ -12,6 +14,7 @@
             if (response.IsSuccessStatusCode) {
                 message = "Registracija uspešna!";
                 registrationModel = new RegistrationModel();
+                Navigation.NavigateTo("login"); 
             } else {
                 message = "Registracija nije uspela. " + await response.Content.ReadAsStringAsync();
             }

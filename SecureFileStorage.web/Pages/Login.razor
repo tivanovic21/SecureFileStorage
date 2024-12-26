@@ -2,38 +2,17 @@
 @using System.Net.Http.Json
 @inject HttpClient Http
 @inject NavigationManager Navigation
-
-@code {
-    private LoginModel loginModel = new LoginModel();
-    private string? message = null;
-
-    private async Task HandleLogin() {
-        message = null;
-        try {
-            var response = await Http.PostAsJsonAsync("api/users/login", loginModel);
-            if (response.IsSuccessStatusCode) {
-                message = "Prijava uspešna!";
-                loginModel = new LoginModel();
-                Navigation.NavigateTo("/");  // Redirect to "Početna" (Home) after successful login
-            } else {
-                message = "Prijava nije uspela. " + await response.Content.ReadAsStringAsync();
-            }
-        } catch (Exception ex) {
-            message = $"Greška prilikom prijave: {ex.Message.ToLower()}";
-        }
-    }
-
-    public class LoginModel {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-}
+@inject IJSRuntime JSRuntime
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg p-4 mt-5">
                 <h3 class="card-title text-center">Prijavi se</h3>
+
+                @if (isAuthenticated) {
+                    <div class="alert-success alert text-center">Već ste prijavljeni, preusmjeravanje...</div>
+                }
 
                 @if (message != null)
                 {
@@ -68,3 +47,57 @@
         </div>
     </div>
 </div>
+
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string? message = null;
+
+    private bool isAuthenticated;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            isAuthenticated = !string.IsNullOrWhiteSpace(token);
+            if (isAuthenticated) {
+                Navigation.NavigateTo("/");
+            }
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleLogin() {
+        message = null;
+        try {
+            var response = await Http.PostAsJsonAsync("api/users/login", loginModel);
+            if (response.IsSuccessStatusCode) {
+            var responseData = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            
+            if (responseData == null || string.IsNullOrWhiteSpace(responseData.Token)) {
+                message = "Greška prilikom prijave. Pokušajte ponovo.";
+                return;
+            }
+
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", responseData.Token);
+            isAuthenticated = true;
+            loginModel = new LoginModel();
+            Navigation.NavigateTo("/");  
+        } else {
+            message = "Prijava nije uspela. " + await response.Content.ReadAsStringAsync();
+        }
+        } catch (Exception ex) {
+            message = $"Greška prilikom prijave: {ex.Message.ToLower()}";
+        }
+    }
+
+    public class LoginModel {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class LoginResponse {
+        public string Token { get; set; } = string.Empty;
+    }
+}

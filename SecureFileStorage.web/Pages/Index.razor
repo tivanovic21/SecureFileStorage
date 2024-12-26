@@ -1,9 +1,22 @@
 ﻿@page "/"
 
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
 <PageTitle>Secure File Storage</PageTitle>
 
 <h1>Dobrodošli u Secure File Storage aplikaciju</h1>
 
-Molimo Vas da se prijavite kako biste mogli da koristite aplikaciju.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Navigation.NavigateTo("login");
+            }
+        }
+    }
+}

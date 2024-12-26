@@ -3,15 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using SecureFileStorage.Core.Dtos;
 using SecureFileStorage.Core.Entities;
 using SecureFileStorage.Core.Interfaces;
-
+using SecureFileStorage.Web.Data;
 using Route = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController: ControllerBase {
     private readonly IUserRepository _userRepository;
-    public UsersController(IUserRepository userRepository) {
+    private readonly ITokenService _tokenService;
+    public UsersController(IUserRepository userRepository, ITokenService tokenService) {
         _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
     [HttpPost("register")]
@@ -27,6 +29,7 @@ public class UsersController: ControllerBase {
         var user = new User {
             Email = request.Email,
             PasswordHash = HashPassword(request.Password),
+            UserTypeId = request.UserTypeId,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -35,7 +38,7 @@ public class UsersController: ControllerBase {
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] RegistrationDto request) {
+    public async Task<IActionResult> Login([FromBody] LoginDto request) {
         if (request.Email == null || request.Password == null) {
             return BadRequest("Email i lozinka su obavezni!");
         }
@@ -49,7 +52,8 @@ public class UsersController: ControllerBase {
             return BadRequest("Pogrešna lozinka!");
         }
 
-        return Ok();
+        var token = _tokenService.GenerateToken(user.Id);
+        return Ok(new {token});
     }
 
     private string HashPassword(string password) {

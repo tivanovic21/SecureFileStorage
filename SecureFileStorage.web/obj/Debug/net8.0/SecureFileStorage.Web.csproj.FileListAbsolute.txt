@@ -87,3 +87,11 @@
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Abstractions.dll
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.Extensions.FileProviders.Physical.dll
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
