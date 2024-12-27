@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecureFileStorage.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aca4bc792ba3f77e5c54f67951958aa09ac7020b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acfcbe457cf60161ac1d031c8d945a6fb206dbd2")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecureFileStorage.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecureFileStorage.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

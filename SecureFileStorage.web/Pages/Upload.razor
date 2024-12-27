@@ -1,13 +1,13 @@
 @page "/upload"
+
 @using SecureFileStorage.Core.Interfaces
+@using SecureFileStorage.Web.Services
 @using Microsoft.AspNetCore.Components.Authorization
-@using System.IdentityModel.Tokens.Jwt
-@using System.Security.Cryptography
-@using System.Text
+
 @inject IFileStorageService FileStorageService
-@inject IDbContext DbContext
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IJSRuntime JSRuntime
+@inject ITokenService TokenService
+@inject IFileService FileService
+
 
 <div class="container mt-4">
     <h3>Prenesi datoteku</h3>
@@ -31,7 +31,6 @@
     private bool isLoading;
     private string message;
     private bool isError;
-
     private async Task LoadFiles(InputFileChangeEventArgs e) {
         try {
             isLoading = true;
@@ -44,14 +43,14 @@
             await originalStream.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            var userId = await GetLoggedInUserIdAsync();
+            var userId = await TokenService.GetLoggedInUserIdAsync();
             var uploadTimestamp = DateTime.UtcNow;
-            var (signature, publicKeyString) = await GenerateSignatureAsync(file.Name, userId, memoryStream, uploadTimestamp);
+            var (signature, publicKeyString) = await FileService.GenerateSignatureAsync(file.Name, userId, memoryStream, uploadTimestamp);
 
             memoryStream.Position = 0;
-            var encryptedUrl = await FileStorageService.UploadFileAsync(memoryStream, file.Name, userId);
+            var encryptedUrl = await FileStorageService.UploadFileAsync(memoryStream, file.Name, userId); // azure upload
 
-            var fileEntity = new SecureFileStorage.Core.Entities.File {
+            var fileDto = new SecureFileStorage.Core.Dtos.FileDto {
                 FileName = file.Name,
                 EncryptedUrl = encryptedUrl,
                 UploaderId = userId,
@@ -60,9 +59,7 @@
                 PublicKey = publicKeyString
             };
 
-            DbContext.File.Add(fileEntity);
-            await DbContext.SaveChangesAsync();
-
+            await FileService.AddFileAsync(fileDto); // db save
             message = "Datoteka uspješno prenesena!";
         } catch (Exception ex) {
             isError = true;
@@ -70,62 +67,5 @@
         } finally {
             isLoading = false;
         }
-    }
-
-    private async Task<int> GetLoggedInUserIdAsync() {
-        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-
-        if (string.IsNullOrEmpty(token)) {
-            throw new InvalidOperationException("Token not found.");
-        }
-
-        var userId = GetUserIdFromToken(token);
-
-        if (userId == null) {
-            throw new InvalidOperationException("User ID claim not found in token.");
-        }
-
-        return int.Parse(userId);
-    }
-
-    private string? GetUserIdFromToken(string token) {
-        var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadJwtToken(token);
-
-        var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "id");
-
-        return userIdClaim?.Value;
-    }
-
-    private async Task<(string Signature, string PublicKey)> GenerateSignatureAsync(string fileName, int userId, Stream fileStream, DateTime uploadTimestamp) {
-        using var rsa = new RSACryptoServiceProvider(2048);
-        try {
-            var privateKey = rsa.ExportParameters(true);
-            var publicKey = rsa.ExportParameters(false);
-
-            var publicKeyString = Convert.ToBase64String(rsa.ExportRSAPublicKey());
-
-            using var sha256 = SHA256.Create();
-            var fileHash = await ComputeHashAsync(fileStream, sha256);
-            var fileHashString = Convert.ToBase64String(fileHash);
-
-            var dataToSign = Encoding.UTF8.GetBytes($"{fileName}{userId}{fileHashString}{uploadTimestamp:O}");
-            var signedData = rsa.SignData(dataToSign, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-            var signature = Convert.ToBase64String(signedData);
-            return (signature, publicKeyString);
-        } finally {
-            rsa.PersistKeyInCsp = false;
-        }
-    }
-
-    private async Task<byte[]> ComputeHashAsync(Stream stream, HashAlgorithm hashAlgorithm) {
-        var buffer = new byte[8192];
-        int bytesRead;
-        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0) {
-            hashAlgorithm.TransformBlock(buffer, 0, bytesRead, null, 0);
-        }
-        hashAlgorithm.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
-        return hashAlgorithm.Hash;
     }
 }

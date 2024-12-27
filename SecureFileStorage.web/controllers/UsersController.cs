@@ -4,6 +4,7 @@ using SecureFileStorage.Core.Dtos;
 using SecureFileStorage.Core.Entities;
 using SecureFileStorage.Core.Interfaces;
 using SecureFileStorage.Web.Data;
+using SecureFileStorage.Web.Services;
 using Route = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 [Route("api/[controller]")]

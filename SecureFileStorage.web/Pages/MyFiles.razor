@@ -1,0 +1,131 @@
+@page "/myfiles"
+
+@using SecureFileStorage.Core.Dtos
+@using SecureFileStorage.Core.Interfaces
+@using SecureFileStorage.Web.Services
+
+@inject ITokenService TokenService
+@inject IFileService FileService
+
+<div class="container mt-4">
+    <h3>Moje datoteke</h3>
+
+    @if (isLoading) {
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Učitavanje...</span>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert @(isError ? "alert-danger" : "alert-success") mt-3" role="alert">
+            @message
+        </div>
+    }
+
+    @if (files != null && files.Any()) {
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Ime dokumenta</th>
+                    <th>Vrijeme prijenosa</th>
+                    <th>Vlasnik dokumenta</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in files) {
+                    <tr>
+                        <td>@file.FileName</td>
+                        <td>@file.UploadedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@file.Uploader.Email</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm me-2" @onclick="() => DownloadFile(file.Id)">Download</button>
+                            <button class="btn btn-secondary btn-sm" @onclick="() => OpenAddUserModal(file.Id)">Add User</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    } else if (!isLoading) {
+        <div class="mt-3">Nemate dostupnih datoteka</div>
+    }
+
+    @if (isAddUserModalOpen)
+    {
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add User to File</h5>
+                        <button type="button" class="btn-close" @onclick="CloseAddUserModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="email" class="form-control" placeholder="User Email" @bind="newUserEmail" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CloseAddUserModal">Close</button>
+                        <button class="btn btn-primary" @onclick="AddUserToFile">Add User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    }
+</div>
+
+@code {
+    private bool isLoading = false;
+    private bool isError = false;
+    private string message;
+    private List<FileDto> files = new();
+    private bool isAddUserModalOpen = false;
+    private int selectedFileId;
+    private string newUserEmail = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try {
+            isLoading = true;
+            int userId = await TokenService.GetLoggedInUserIdAsync();
+            files = (await FileService.GetFilesForUserAsync(userId)).ToList();
+        } catch (Exception ex) {
+            isError = true;
+            message = ex.Message;
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    private void DownloadFile(int fileId)
+    {
+        // Implement download logic here
+    }
+
+    private void OpenAddUserModal(int fileId)
+    {
+        selectedFileId = fileId;
+        isAddUserModalOpen = true;
+    }
+
+    private void CloseAddUserModal()
+    {
+        isAddUserModalOpen = false;
+        newUserEmail = string.Empty;
+    }
+
+    private async Task AddUserToFile()
+    {
+        try {
+            isLoading = true;
+            // logika za dodavanje
+            message = "Korisnik uspješno dodan.";
+            isError = false;
+        } catch (Exception ex) {
+            isError = true;
+            message = ex.Message;
+        } finally {
+            isLoading = false;
+            CloseAddUserModal();
+        }
+    }
+}
