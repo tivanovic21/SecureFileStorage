@@ -95,3 +95,10 @@
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Azure.Core.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Azure.Storage.Blobs.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Azure.Storage.Common.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/System.ClientModel.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/System.IO.Hashing.dll
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/bin/Debug/net8.0/System.Memory.Data.dll

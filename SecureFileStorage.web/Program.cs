@@ -9,6 +9,8 @@ using SecureFileStorage.Web.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using SecureFileStorage.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthSettings"));
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IFileStorageService, AzureBlobService>();
 
+builder.Services.AddScoped<IDbContext>(provider => provider.GetService<ApplicationDbContext>());
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 

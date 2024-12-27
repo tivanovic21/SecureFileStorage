@@ -22,10 +22,6 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/Pages/FetchData.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmV0Y2hEYXRhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -40,6 +36,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/Pages/Upload.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVXBsb2FkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/toniivanovic/Desktop/sis/SecureFileStorage.web/Shared/SurveyPrompt.razor]

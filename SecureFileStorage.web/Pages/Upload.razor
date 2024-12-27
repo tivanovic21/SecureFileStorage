@@ -1,0 +1,91 @@
+@page "/upload"
+@using SecureFileStorage.Core.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.IdentityModel.Tokens.Jwt
+@inject IFileStorageService FileStorageService
+@inject IDbContext DbContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+
+<div class="container mt-4">
+    <h3>Prenesi datoteku</h3>
+
+    <InputFile OnChange="@LoadFiles" class="form-control mb-3"/>
+
+    @if (isLoading) {
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Učitavanje...</span>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(message)) {
+        <div class="alert @(isError ? "alert-danger" : "alert-success") mt-3" role="alert">
+            @message
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading;
+    private string message;
+    private bool isError;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e){
+        try {
+            isLoading = true;
+            isError = false;
+            message = string.Empty;
+            
+            var file = e.File;
+            using var stream = file.OpenReadStream();
+
+            var userId = await GetLoggedInUserIdAsync();
+
+            var encryptedUrl = await FileStorageService.UploadFileAsync(stream, file.Name, userId);
+
+            var fileEntity = new SecureFileStorage.Core.Entities.File {
+                FileName = file.Name,
+                EncryptedUrl = encryptedUrl,
+                UploaderId = userId,
+                UploadedAt = DateTime.UtcNow
+            };
+
+            DbContext.File.Add(fileEntity);
+            await DbContext.SaveChangesAsync();
+
+            message = "Datoteka uspješno prenesena!";
+
+        } catch (Exception ex) {
+            isError = true;
+            message = $"Greška prilikom prijenosa datoteke: {ex.Message}";
+        } finally 
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task<int> GetLoggedInUserIdAsync() {
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+
+        if (string.IsNullOrEmpty(token)) {
+            throw new InvalidOperationException("Token not found.");
+        }
+
+        var userId = GetUserIdFromToken(token);
+
+        if (userId == null) {
+            throw new InvalidOperationException("User ID claim not found in token.");
+        }
+
+        return int.Parse(userId);
+    }
+
+    private string? GetUserIdFromToken(string token) {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "id");
+
+        return userIdClaim?.Value;
+    }
+}

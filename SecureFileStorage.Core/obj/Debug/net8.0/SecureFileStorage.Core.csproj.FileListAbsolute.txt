@@ -10,3 +10,4 @@
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.pdb
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/ref/SecureFileStorage.Core.dll
 /Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.sourcelink.json
+/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/Debug/net8.0/SecureFileStorage.Core.csproj.AssemblyReference.cache
