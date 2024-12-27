@@ -7,6 +7,8 @@
 @inject ITokenService TokenService
 @inject IFileService FileService
 @inject IActivityLogService ActivityLogService
+@inject IFileStorageService FileStorageService
+@inject IJSRuntime JS
 
 <div class="container mt-4">
     <h3>Moje datoteke</h3>
@@ -40,7 +42,7 @@
                         <td>@file.UploadedAt.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@file.Uploader.Email</td>
                         <td>
-                            <button class="btn btn-primary btn-sm me-2" @onclick="() => DownloadFile(file.Id)">Preuzmi</button>
+                            <button class="btn btn-primary btn-sm me-2" @onclick="async () => DownloadFile(file.Id)">Preuzmi</button>
                             <button class="btn btn-secondary btn-sm me-2" @onclick="() => OpenAddUserModal(file.Id)">Dodaj pravo pristupa</button>
                             <button class="btn btn-secondary btn-sm" @onclick="async () => OpenActionsModal(file.Id)">Vidi akcije</button>
                         </td>
@@ -153,9 +155,13 @@
         }
     }
 
-    private void DownloadFile(int fileId)
+    private async void DownloadFile(int fileId)
     {
-        // Implement download logic here
+        var fileData = await FileService.GetFileAsync(fileId);
+        var encryptedUrl = fileData.EncryptedUrl;
+        var fileUri = $"api/files/download?encryptedUrl={Uri.EscapeDataString(encryptedUrl)}";
+
+        await JS.InvokeVoidAsync("triggerFileDownload", fileUri);
     }
 
     private void OpenAddUserModal(int fileId)
@@ -211,3 +217,32 @@
         }
     }
 }
+
+<script>
+    async function triggerFileDownload(fileUrl) {
+        const response = await fetch(fileUrl);
+        if (!response.ok) {
+            console.error('Failed to download file: ', response.statusText);
+            return;
+        }
+
+        const disposition = response.headers.get('Content-Disposition');
+        let fileName = 'file'; 
+        if (disposition && disposition.includes('filename=')) {
+            const fileNameMatch = disposition.match(/filename="?([^"]+)"?/);
+            if (fileNameMatch && fileNameMatch[1]) {
+                fileName = fileNameMatch[1];
+            }
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    }
+</script>

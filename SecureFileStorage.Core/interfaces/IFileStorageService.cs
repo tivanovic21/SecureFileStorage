@@ -4,5 +4,6 @@ namespace SecureFileStorage.Core.Interfaces
     {
         Task<string> UploadFileAsync(Stream fileStream, string fileName, int userId);
         string DecryptUrl(string encryptedUrl);
+        Task<(Stream FileStream, string FileName)> DownloadFileAsync(string encryptedUrl);
     }
 }

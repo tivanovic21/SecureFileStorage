@@ -31,12 +31,43 @@ namespace SecureFileStorage.Infrastructure.Services
             return System.Text.Encoding.UTF8.GetString(decryptedBytes);
         }
 
+        public async Task<(Stream FileStream, string FileName)> DownloadFileAsync(string encryptedUrl)
+        {
+            var url = DecryptUrl(encryptedUrl);
+            Uri blobUri = new Uri(url);
+
+            string blobName = Uri.UnescapeDataString(blobUri.AbsolutePath.TrimStart('/'));
+            if (blobName.StartsWith($"{_containerName}/"))
+            {
+                blobName = blobName.Substring(_containerName.Length + 1);
+            }
+
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            if(!await blobClient.ExistsAsync())
+            {
+                throw new FileNotFoundException("The requested file not found in Azure Blob Storage!");
+            }
+
+            try {
+                var properties = await blobClient.GetPropertiesAsync();
+                var fileName = properties.Value.Metadata.ContainsKey("FileName") ? properties.Value.Metadata["FileName"] : blobName;
+                var downloadResponse = await blobClient.DownloadContentAsync();
+                return (new MemoryStream(downloadResponse.Value.Content.ToArray()), fileName);
+            } catch (Exception ex) {
+                Console.WriteLine("Greška prilikom preuzimanja s Azure-a: " + ex.Message);
+                throw;
+            }
+        }
+
         public async Task<string> UploadFileAsync(Stream fileStream, string fileName, int userId)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
             await containerClient.CreateIfNotExistsAsync();
 
-            var blobName = $"{userId}/{Guid.NewGuid()}_{fileName}";
+            var encodedFileName = Uri.EscapeDataString(fileName);
+            var blobName = $"{userId}/{Guid.NewGuid()}_{encodedFileName}";
             var blobClient = containerClient.GetBlobClient(blobName);
 
             await blobClient.UploadAsync(fileStream, overwrite: true);
