@@ -13,10 +13,11 @@ namespace SecureFileStorage.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task AddFileAsync(File file)
+        public async Task<File> AddFileAsync(File file)
         {
             await _dbContext.File!.AddAsync(file);
             await _dbContext.SaveChangesAsync();
+            return file;
         }
 
         public async Task DeleteFileAsync(int fileId)

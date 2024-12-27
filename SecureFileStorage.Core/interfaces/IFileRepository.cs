@@ -6,7 +6,7 @@ namespace SecureFileStorage.Core.Interfaces
     {
         Task<File> GetFileAsync(int fileId);
         Task<IEnumerable<File>> GetFilesForUserAsync(int userId);
-        Task AddFileAsync(File file);
+        Task<File> AddFileAsync(File file);
         Task<File> UpdateFileAsync(File file);
         Task DeleteFileAsync(int fileId);
     }

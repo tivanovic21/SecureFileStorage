@@ -1,13 +1,14 @@
 @page "/upload"
 
 @using SecureFileStorage.Core.Interfaces
+@using SecureFileStorage.Infrastructure.Enums
 @using SecureFileStorage.Web.Services
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject IFileStorageService FileStorageService
 @inject ITokenService TokenService
 @inject IFileService FileService
-
+@inject IActivityLogService ActivityLogService
 
 <div class="container mt-4">
     <h3>Prenesi datoteku</h3>
@@ -59,7 +60,8 @@
                 PublicKey = publicKeyString
             };
 
-            await FileService.AddFileAsync(fileDto); // db save
+            int fileId = (await FileService.AddFileAsync(fileDto)).Id; // db save
+            await ActivityLogService.LogActivity(userId, fileId, ActivityLogEnum.Upload); // activity log
             message = "Datoteka uspješno prenesena!";
         } catch (Exception ex) {
             isError = true;

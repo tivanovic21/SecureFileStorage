@@ -6,6 +6,7 @@
 
 @inject ITokenService TokenService
 @inject IFileService FileService
+@inject IActivityLogService ActivityLogService
 
 <div class="container mt-4">
     <h3>Moje datoteke</h3>
@@ -29,7 +30,7 @@
                     <th>Ime dokumenta</th>
                     <th>Vrijeme prijenosa</th>
                     <th>Vlasnik dokumenta</th>
-                    <th>Actions</th>
+                    <th>Akcije</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,8 +40,9 @@
                         <td>@file.UploadedAt.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@file.Uploader.Email</td>
                         <td>
-                            <button class="btn btn-primary btn-sm me-2" @onclick="() => DownloadFile(file.Id)">Download</button>
-                            <button class="btn btn-secondary btn-sm" @onclick="() => OpenAddUserModal(file.Id)">Add User</button>
+                            <button class="btn btn-primary btn-sm me-2" @onclick="() => DownloadFile(file.Id)">Preuzmi</button>
+                            <button class="btn btn-secondary btn-sm me-2" @onclick="() => OpenAddUserModal(file.Id)">Dodaj pravo pristupa</button>
+                            <button class="btn btn-secondary btn-sm" @onclick="async () => OpenActionsModal(file.Id)">Vidi akcije</button>
                         </td>
                     </tr>
                 }
@@ -56,21 +58,73 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add User to File</h5>
+                        <h5 class="modal-title">Dodaj pravo pristupa korisniku</h5>
                         <button type="button" class="btn-close" @onclick="CloseAddUserModal"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="email" class="form-control" placeholder="User Email" @bind="newUserEmail" />
+                        <EditForm Model="@newUserEmail" OnValidSubmit="AddUserToFile">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="form-group">
+                                <label for="userEmail">Korisnikov email</label>
+                                <InputText id="userEmail" class="form-control" placeholder="primjer@email.com" @bind-Value="newUserEmail" />
+                            </div>
+                        </EditForm>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @onclick="CloseAddUserModal">Close</button>
-                        <button class="btn btn-primary" @onclick="AddUserToFile">Add User</button>
+                        <button class="btn btn-secondary" @onclick="CloseAddUserModal">Odustani</button>
+                        <button class="btn btn-primary" @onclick="AddUserToFile">Dodaj korisnika</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-backdrop fade show"></div>
     }
+
+    @if (isActionsModalOpen)
+    {
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Akcije za dokument @selectedDocument</h5>
+                        <button type="button" class="btn-close" @onclick="CloseActionsModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (activities != null && activities.Any())
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Korisnik</th>
+                                        <th>Akcija</th>
+                                        <th>Vrijeme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var activity in activities)
+                                    {
+                                        <tr>
+                                            <td>@activity.User.Email</td>
+                                            <td>@activity.Action</td>
+                                            <td>@activity.Timestamp.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Nema aktivnosti za prikazati.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    }
+
 </div>
 
 @code {
@@ -79,8 +133,11 @@
     private string message;
     private List<FileDto> files = new();
     private bool isAddUserModalOpen = false;
+    private bool isActionsModalOpen = false;
     private int selectedFileId;
     private string newUserEmail = string.Empty;
+    private List<ActivityLogDto> activities = new();
+    private string selectedDocument = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,6 +168,31 @@
     {
         isAddUserModalOpen = false;
         newUserEmail = string.Empty;
+    }
+
+    private async void OpenActionsModal(int fileId)
+    {
+        await GetActivityLogsForFile(fileId);
+        selectedDocument = files.First(f => f.Id == fileId).FileName;
+        isActionsModalOpen = true;
+    }
+
+    private void CloseActionsModal()
+    {
+        isActionsModalOpen = false;
+    }
+
+    private async Task GetActivityLogsForFile(int fileId)
+    {
+        try {
+            isLoading = true;
+            activities = (await ActivityLogService.GetActivityLogsForFile(fileId)).ToList();
+        } catch (Exception ex) {
+            isError = true;
+            message = ex.Message;
+        } finally {
+            isLoading = false;
+        }
     }
 
     private async Task AddUserToFile()

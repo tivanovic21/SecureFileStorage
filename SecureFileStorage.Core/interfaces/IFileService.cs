@@ -6,7 +6,7 @@ namespace SecureFileStorage.Core.Interfaces
     {
         Task<IEnumerable<FileDto>> GetFilesForUserAsync(int userId);
         Task<FileDto> GetFileAsync(int fileId);
-        Task AddFileAsync(FileDto file);
+        Task<FileDto> AddFileAsync(FileDto file);
         Task<FileDto> UpdateFileAsync(FileDto file);
         Task DeleteFileAsync(int fileId);
         Task<(string signature, string publicKey)> GenerateSignatureAsync(string fileName, int userId, Stream fileStream, DateTime uploadTimestamp);

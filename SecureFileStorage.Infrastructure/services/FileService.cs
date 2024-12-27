@@ -15,9 +15,9 @@ namespace SecureFileStorage.Infrastructure.Services
             _fileRepository = fileRepository;
         }
 
-        public async Task AddFileAsync(FileDto file)
+        public async Task<FileDto> AddFileAsync(FileDto file)
         {
-            await _fileRepository.AddFileAsync(MapDtoToFile(file));
+            return MapFileToDto(await _fileRepository.AddFileAsync(MapDtoToFile(file)));
         }
 
         public async Task DeleteFileAsync(int fileId)
