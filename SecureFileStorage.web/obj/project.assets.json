@@ -2342,11 +2342,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Web/SecureFileStorage.Web.csproj",
+      "projectUniqueName": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Web/SecureFileStorage.Web.csproj",
       "projectName": "SecureFileStorage.Web",
-      "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Web/SecureFileStorage.Web.csproj",
+      "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Web/SecureFileStorage.Web.csproj",
       "packagesPath": "/Users/toniivanovic/.nuget/packages/",
-      "outputPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Web/obj/",
+      "outputPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Web/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"
@@ -2362,8 +2362,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj": {
-              "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj"
+            "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj": {
+              "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj"
             }
           }
         }

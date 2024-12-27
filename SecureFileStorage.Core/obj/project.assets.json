@@ -1281,11 +1281,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+      "projectUniqueName": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
       "projectName": "SecureFileStorage.Core",
-      "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+      "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
       "packagesPath": "/Users/toniivanovic/.nuget/packages/",
-      "outputPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/obj/",
+      "outputPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"

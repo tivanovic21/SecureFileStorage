@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "drU8HfAc0fQ=",
+  "dgSpecHash": "f3vqvJGsEa0=",
   "success": true,
-  "projectFilePath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+  "projectFilePath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
   "expectedPackageFiles": [
     "/Users/toniivanovic/.nuget/packages/microsoft.data.sqlite.core/9.0.0/microsoft.data.sqlite.core.9.0.0.nupkg.sha512",
     "/Users/toniivanovic/.nuget/packages/microsoft.entityframeworkcore/9.0.0/microsoft.entityframeworkcore.9.0.0.nupkg.sha512",

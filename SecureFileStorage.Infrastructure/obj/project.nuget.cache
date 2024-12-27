@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uHTHUYchyR0=",
+  "dgSpecHash": "+ZfLhKWLRU4=",
   "success": true,
-  "projectFilePath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj",
+  "projectFilePath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj",
   "expectedPackageFiles": [
     "/Users/toniivanovic/.nuget/packages/azure.core/1.44.1/azure.core.1.44.1.nupkg.sha512",
     "/Users/toniivanovic/.nuget/packages/azure.storage.blobs/12.23.0/azure.storage.blobs.12.23.0.nupkg.sha512",
