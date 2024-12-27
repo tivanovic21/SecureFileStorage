@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using SecureFileStorage.Infrastructure.Services;
 using SecureFileStorage.Web.Services;
+using SecureFileStorage.Core.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,14 @@ builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthS
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFileStorageService, AzureBlobService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IUserTypeService, UserTypeService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IUserTypeRepository, UserTypeRepository>();
 
 builder.Services.AddScoped(sp => {
     var navigationManager = sp.GetRequiredService<NavigationManager>();

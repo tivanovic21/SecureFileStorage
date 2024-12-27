@@ -31,5 +31,10 @@ public class ApplicationDbContext : DbContext
             .HasPrincipalKey(u => new { u.Id, u.Email })
             .HasForeignKey(fa => new { fa.UserId, fa.UserEmail })
             .IsRequired(false);
+
+        modelBuilder.Entity<UserType>().HasData(
+            new UserType { Id = 1, Name = "Admin" },
+            new UserType { Id = 2, Name = "Korisnik" }
+        );
     }
 }

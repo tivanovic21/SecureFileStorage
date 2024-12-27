@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.JSInterop;
+using SecureFileStorage.Core.Entities;
+using SecureFileStorage.Core.Interfaces;
 using SecureFileStorage.Web.Data;
 
 namespace SecureFileStorage.Web.Services
@@ -12,11 +14,13 @@ namespace SecureFileStorage.Web.Services
     public class TokenService : ITokenService
     {
         private readonly AuthSettings _authSettings;
+        private readonly IUserRepository _userRepository;
         private readonly IJSRuntime JSRuntime;
-        public TokenService(IOptions<AuthSettings> authSettings, IJSRuntime JSRuntime)
+        public TokenService(IOptions<AuthSettings> authSettings, IJSRuntime JSRuntime, IUserRepository userRepository)
         {
             _authSettings = authSettings.Value;
             this.JSRuntime = JSRuntime;
+            _userRepository = userRepository;
         }
 
         public string GenerateToken(int userId)
@@ -45,6 +49,11 @@ namespace SecureFileStorage.Web.Services
             return tokenHandler.WriteToken(token);
         }
 
+        public async Task<User?> GetLoggedInUser(int id)
+        {
+            return await _userRepository.GetUserByIdAsync(id);
+        }
+
         public async Task<int> GetLoggedInUserIdAsync()
         {
             if (JSRuntime == null) throw new InvalidOperationException("JSRuntime is not initialized.");
@@ -64,6 +73,11 @@ namespace SecureFileStorage.Web.Services
             }
 
             return int.Parse(userId);
+        }
+
+        public async Task<bool> UserIsAdmin(int id)
+        {
+            return await _userRepository.UserIsAdminAsync(id);
         }
 
         private string? GetUserIdFromToken(string token)

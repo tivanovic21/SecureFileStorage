@@ -11,8 +11,8 @@ using SecureFileStorage.Infrastructure.Data;
 namespace SecureFileStorage.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226192007_SeedUserTypes")]
-    partial class SeedUserTypes
+    [Migration("20241227144517_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,11 +63,9 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PublicKey")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Signature")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UploadedAt")
@@ -101,14 +99,9 @@ namespace SecureFileStorage.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("FileId", "UserEmail");
 
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId", "UserEmail");
 
                     b.ToTable("FileAccess");
                 });
@@ -159,6 +152,18 @@ namespace SecureFileStorage.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Korisnik"
+                        });
                 });
 
             modelBuilder.Entity("SecureFileStorage.Core.Entities.ActivityLog", b =>
@@ -199,15 +204,10 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecureFileStorage.Core.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.HasOne("SecureFileStorage.Core.Entities.User", "User")
                         .WithMany("FileAccesses")
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId", "UserEmail")
+                        .HasPrincipalKey("Id", "Email");
 
                     b.Navigation("File");
 

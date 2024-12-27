@@ -1,39 +1,22 @@
 @page "/register"
 @using System.Net.Http.Json
+@using SecureFileStorage.Core.Dtos
+@using SecureFileStorage.Core.Interfaces
+@using SecureFileStorage.Web.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
-
-@code {
-    private RegistrationModel registrationModel = new RegistrationModel();
-    private string? message = null;
-
-    private async Task HandleRegistration() {
-        message = null;
-        try {
-            var response = await Http.PostAsJsonAsync("api/users/register", registrationModel);
-            if (response.IsSuccessStatusCode) {
-                message = "Registracija uspešna!";
-                registrationModel = new RegistrationModel();
-                Navigation.NavigateTo("login"); 
-            } else {
-                message = "Registracija nije uspela. " + await response.Content.ReadAsStringAsync();
-            }
-        } catch (Exception ex) {
-            message = $"Greška prilikom registracije: {ex.Message}";
-        }
-    }
-
-    public class RegistrationModel {
-        public string Email {get; set;} = string.Empty;
-        public string Password {get; set;} = string.Empty;
-    }
-}
+@inject ITokenService _tokenService
+@inject IUserTypeService _userTypeService
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg p-4 mt-5">
-                <h3 class="card-title text-center">Registriraj se</h3>
+                @if (isAdmin) {
+                    <h3 class="card-title text-center">Dodaj korisnika</h3>
+                } else {
+                    <h3 class="card-title text-center">Registriraj se</h3>
+                }
 
                 @if (message != null)
                 {
@@ -54,17 +37,87 @@
                         <InputText id="password" class="form-control" type="password" @bind-Value="registrationModel.Password" />
                     </div>
 
+                    @if (isAdmin) {
+                        <div class="form-group mt-3">
+                            <label for="userType" class="font-weight-bold text-lg">Vrsta korisnika</label>
+                            <InputSelect id="userType" class="form-control custom-select" @bind-Value="registrationModel.UserTypeId">
+                                @foreach (var userType in userTypes)
+                                {
+                                    <option value="@userType.Id">@userType.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    }
+
                     <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-primary btn-block">Registriraj se</button>
+                        @if (isAdmin) {
+                            <button type="submit" class="btn btn-primary btn-block">Dodaj korisnika</button>
+                        } else {
+                            <button type="submit" class="btn btn-primary btn-block">Registriraj se</button>
+                        }
                     </div>
                 </EditForm>
 
-                <div class="mt-3 d-flex justify-content-center align-items-center">
-                    <span class="d-inline-flex align-items-center">
-                        Postojeći korisnik? <NavLink class="btn btn-link ms-2" href="login">Prijavi se!</NavLink>
-                    </span>
-                </div>
+                @if (!isAdmin) {
+                    <div class="mt-3 d-flex justify-content-center align-items-center">
+                        <span class="d-inline-flex align-items-center">
+                            Postojeći korisnik? <NavLink class="btn btn-link ms-2" href="login">Prijavi se!</NavLink>
+                        </span>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
+
+
+@code {
+    private RegistrationModel registrationModel = new RegistrationModel();
+    private string? message = null;
+    private bool isAdmin = false;
+    private List<UserTypeDto> userTypes = new List<UserTypeDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try {
+            var userId = await _tokenService.GetLoggedInUserIdAsync();
+            if(userId != null) isAdmin = await _tokenService.UserIsAdmin(userId);
+        } catch (InvalidOperationException ex) {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && isAdmin) {
+            await GetUserTypes();
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleRegistration() {
+        message = null;
+        try {
+            var response = await Http.PostAsJsonAsync("api/users/register", registrationModel);
+            if (response.IsSuccessStatusCode) {
+                message = "Registracija uspešna!";
+                registrationModel = new RegistrationModel();
+                Navigation.NavigateTo("login"); 
+            } else {
+                message = "Registracija nije uspela. " + await response.Content.ReadAsStringAsync();
+            }
+        } catch (Exception ex) {
+            message = $"Greška prilikom registracije: {ex.Message}";
+        }
+    }
+
+    private async Task GetUserTypes() {
+        userTypes = (await _userTypeService.GetUserTypes()).ToList();
+    }
+
+    public class RegistrationModel {
+        public string Email {get; set;} = string.Empty;
+        public string Password {get; set;} = string.Empty;
+        public int UserTypeId {get; set;} = 2;
+    }
+}

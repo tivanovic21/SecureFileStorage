@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace SecureFileStorage.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -12,6 +14,19 @@ namespace SecureFileStorage.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "UserType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -20,11 +35,19 @@ namespace SecureFileStorage.Infrastructure.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastLogin = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    LastLogin = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserTypeId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                    table.UniqueConstraint("AK_User_Id_Email", x => new { x.Id, x.Email });
+                    table.ForeignKey(
+                        name: "FK_User_UserType_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalTable: "UserType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,8 +58,8 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     FileName = table.Column<string>(type: "TEXT", nullable: false),
                     EncryptedUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    PublicKey = table.Column<string>(type: "TEXT", nullable: false),
-                    Signature = table.Column<string>(type: "TEXT", nullable: false),
+                    PublicKey = table.Column<string>(type: "TEXT", nullable: true),
+                    Signature = table.Column<string>(type: "TEXT", nullable: true),
                     UploaderId = table.Column<int>(type: "INTEGER", nullable: false),
                     UploadedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -52,7 +75,7 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityLogs",
+                name: "ActivityLog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -64,15 +87,15 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityLogs", x => x.Id);
+                    table.PrimaryKey("PK_ActivityLog", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityLogs_File_FileId",
+                        name: "FK_ActivityLog_File_FileId",
                         column: x => x.FileId,
                         principalTable: "File",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActivityLogs_User_UserId",
+                        name: "FK_ActivityLog_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -84,13 +107,14 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 columns: table => new
                 {
                     FileId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserEmail = table.Column<string>(type: "TEXT", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     AccessLevel = table.Column<string>(type: "TEXT", nullable: false),
                     GrantedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FileAccess", x => new { x.FileId, x.UserId });
+                    table.PrimaryKey("PK_FileAccess", x => new { x.FileId, x.UserEmail });
                     table.ForeignKey(
                         name: "FK_FileAccess_File_FileId",
                         column: x => x.FileId,
@@ -98,21 +122,29 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FileAccess_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_FileAccess_User_UserId_UserEmail",
+                        columns: x => new { x.UserId, x.UserEmail },
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumns: new[] { "Id", "Email" });
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserType",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "Korisnik" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityLogs_FileId",
-                table: "ActivityLogs",
+                name: "IX_ActivityLog_FileId",
+                table: "ActivityLog",
                 column: "FileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityLogs_UserId",
-                table: "ActivityLogs",
+                name: "IX_ActivityLog_UserId",
+                table: "ActivityLog",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -121,22 +153,27 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 column: "UploaderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FileAccess_UserId",
+                name: "IX_FileAccess_UserId_UserEmail",
                 table: "FileAccess",
-                column: "UserId");
+                columns: new[] { "UserId", "UserEmail" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_UserTypeId",
+                table: "User",
+                column: "UserTypeId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ActivityLogs");
+                name: "ActivityLog");
 
             migrationBuilder.DropTable(
                 name: "FileAccess");
@@ -146,6 +183,9 @@ namespace SecureFileStorage.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "UserType");
         }
     }
 }
