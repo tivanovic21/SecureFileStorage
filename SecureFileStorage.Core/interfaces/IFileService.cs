@@ -10,5 +10,6 @@ namespace SecureFileStorage.Core.Interfaces
         Task<FileDto> UpdateFileAsync(FileDto file);
         Task DeleteFileAsync(int fileId);
         Task<(string signature, string publicKey)> GenerateSignatureAsync(string fileName, int userId, Stream fileStream, DateTime uploadTimestamp);
+        Task<bool> ValidateDigitalSignature(int fileId);
     }
 }

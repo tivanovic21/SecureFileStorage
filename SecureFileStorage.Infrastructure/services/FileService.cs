@@ -9,10 +9,12 @@ namespace SecureFileStorage.Infrastructure.Services
     public class FileService : IFileService
     {
         private readonly IFileRepository _fileRepository;
+        private readonly IFileStorageService _fileStorageService;
 
-        public FileService(IFileRepository fileRepository)
+        public FileService(IFileRepository fileRepository, IFileStorageService fileStorageService)
         {
             _fileRepository = fileRepository;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<FileDto> AddFileAsync(FileDto file)
@@ -45,6 +47,40 @@ namespace SecureFileStorage.Infrastructure.Services
                 return (signature, publicKeyString);
             } finally {
                 rsa.PersistKeyInCsp = false;
+            }
+        }
+
+        public async Task<bool> ValidateDigitalSignature(int fileId)
+        {
+            var file = await _fileRepository.GetFileAsync(fileId);
+            if (file == null || string.IsNullOrEmpty(file.Signature) || string.IsNullOrEmpty(file.PublicKey)) {
+                throw new Exception("Dokument ne sadrži valjane podatke za provjeru digitalnog potpisa!");
+            }
+
+            var (fileStream, fileName) = await _fileStorageService.DownloadFileAsync(file.EncryptedUrl);
+
+            using var sha256 = SHA256.Create();
+            var fileHash = await ComputeHashAsync(fileStream, sha256);
+            var fileHashString = Convert.ToBase64String(fileHash);
+
+            var dataToVerify = Encoding.UTF8.GetBytes($"{fileName}{file.UploaderId}{fileHashString}{file.UploadedAt:O}");
+
+            var signature = Convert.FromBase64String(file.Signature);
+            var publicKey = Convert.FromBase64String(file.PublicKey);
+
+            using var rsa = new RSACryptoServiceProvider();
+            try
+            {
+                rsa.ImportRSAPublicKey(publicKey, out _);
+
+                bool isValid = rsa.VerifyData(dataToVerify, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                return isValid;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error during RSA operation: " + ex.Message);
+                return false;
             }
         }
 

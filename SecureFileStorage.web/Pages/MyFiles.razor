@@ -14,8 +14,6 @@
 @inject IJSRuntime JS
 
 <div class="container mt-4">
-    <h3>Moje datoteke</h3>
-
     @if (isLoading) {
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Učitavanje...</span>
@@ -27,7 +25,10 @@
             @message
         </div>
     }
+</div>
 
+<div class="container mt-4">
+    <h3>Moje datoteke</h3>
     @if (files != null && files.Any()) {
         <table class="table table-striped mt-3">
             <thead>
@@ -76,6 +77,7 @@
                         <td>@(sharedFile.File?.Uploader?.Email ?? "N/A")</td>
                         <td>
                             <button class="btn btn-primary btn-sm" @onclick="async () => DownloadFile(sharedFile.FileId)">Preuzmi</button>
+                            <button class="btn btn-primary btn-sm" @onclick="async () => ValidateDigitalSignature(sharedFile.FileId)">Provjeri autentičnost dokumenta</button>
                         </td>
                     </tr>
                 }
@@ -198,6 +200,27 @@
         await JS.InvokeVoidAsync("triggerFileDownload", fileUri);
 
         await ActivityLogService.LogActivity(loggedUserId, fileId, ActivityLogEnum.Download); // activity log
+    }
+
+    private async Task ValidateDigitalSignature(int fileId) {
+        isLoading = true;
+        isError = false;
+        message = string.Empty;
+        try {
+            var isValid = await FileService.ValidateDigitalSignature(fileId);
+            if (isValid) {
+                message = "Potpis je valjan.";
+            } else {
+                isError = true;
+                message = "Potpis nije valjan.";
+            }
+        } catch (Exception ex) {
+            isError = true;
+            message = $"Greška prilikom provjere potpisa {ex.Message}";
+        } finally {
+            isLoading = false;
+            StateHasChanged();
+        }
     }
 
     private void OpenAddUserModal(int fileId)
