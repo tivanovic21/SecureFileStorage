@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using SecureFileStorage.Core.Dtos;
@@ -9,6 +10,7 @@ using Route = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UsersController: ControllerBase {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
@@ -18,6 +20,7 @@ public class UsersController: ControllerBase {
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegistrationDto request) {
         if (request.Email == null || request.Password == null) {
             return BadRequest("Email i lozinka su obavezni!");
@@ -39,6 +42,7 @@ public class UsersController: ControllerBase {
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto request) {
         if (request.Email == null || request.Password == null) {
             return BadRequest("Email i lozinka su obavezni!");

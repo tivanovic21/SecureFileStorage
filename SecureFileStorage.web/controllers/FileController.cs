@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using SecureFileStorage.Core.Interfaces;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class FilesController : ControllerBase
 {
     private readonly IFileStorageService _fileStorageService;
