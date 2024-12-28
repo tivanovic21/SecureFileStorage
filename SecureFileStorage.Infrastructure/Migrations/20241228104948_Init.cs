@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SecureFileStorage.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,7 +41,6 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                    table.UniqueConstraint("AK_User_Id_Email", x => new { x.Id, x.Email });
                     table.ForeignKey(
                         name: "FK_User_UserType_UserTypeId",
                         column: x => x.UserTypeId,
@@ -108,7 +107,7 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 {
                     FileId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserEmail = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true),
                     AccessLevel = table.Column<string>(type: "TEXT", nullable: false),
                     GrantedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -121,11 +120,6 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         principalTable: "File",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FileAccess_User_UserId_UserEmail",
-                        columns: x => new { x.UserId, x.UserEmail },
-                        principalTable: "User",
-                        principalColumns: new[] { "Id", "Email" });
                 });
 
             migrationBuilder.InsertData(
@@ -151,11 +145,6 @@ namespace SecureFileStorage.Infrastructure.Migrations
                 name: "IX_File_UploaderId",
                 table: "File",
                 column: "UploaderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FileAccess_UserId_UserEmail",
-                table: "FileAccess",
-                columns: new[] { "UserId", "UserEmail" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",

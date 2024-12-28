@@ -3,11 +3,14 @@
 @using SecureFileStorage.Core.Dtos
 @using SecureFileStorage.Core.Interfaces
 @using SecureFileStorage.Web.Services
+@using SecureFileStorage.Infrastructure.Enums
 
 @inject ITokenService TokenService
 @inject IFileService FileService
 @inject IActivityLogService ActivityLogService
 @inject IFileStorageService FileStorageService
+@inject IFileAccessService FileAccessService
+@inject IUserService UserService
 @inject IJSRuntime JS
 
 <div class="container mt-4">
@@ -43,7 +46,7 @@
                         <td>@file.Uploader.Email</td>
                         <td>
                             <button class="btn btn-primary btn-sm me-2" @onclick="async () => DownloadFile(file.Id)">Preuzmi</button>
-                            <button class="btn btn-secondary btn-sm me-2" @onclick="() => OpenAddUserModal(file.Id)">Dodaj pravo pristupa</button>
+                            <button class="btn btn-secondary btn-sm me-2" @onclick="async () => OpenAddUserModal(file.Id)">Dodaj pravo pristupa</button>
                             <button class="btn btn-secondary btn-sm" @onclick="async () => OpenActionsModal(file.Id)">Vidi akcije</button>
                         </td>
                     </tr>
@@ -51,7 +54,33 @@
             </tbody>
         </table>
     } else if (!isLoading) {
-        <div class="mt-3">Nemate dostupnih datoteka</div>
+        <p>Nemate vlastitih datoteka.</p>
+    }
+
+    @if (sharedFiles != null && sharedFiles.Any()) {
+        <h3 class="mt-5">Datoteke podijeljene sa mnom</h3>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Ime dokumenta</th>
+                    <th>Vrijeme prijenosa</th>
+                    <th>Vlasnik dokumenta</th>
+                    <th>Akcije</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sharedFile in sharedFiles) {
+                    <tr>
+                        <td>@(sharedFile.File?.FileName ?? "N/A")</td>
+                        <td>@(sharedFile.File?.UploadedAt.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                        <td>@(sharedFile.File?.Uploader?.Email ?? "N/A")</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" @onclick="async () => DownloadFile(sharedFile.FileId)">Preuzmi</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 
     @if (isAddUserModalOpen)
@@ -134,19 +163,24 @@
     private bool isError = false;
     private string message;
     private List<FileDto> files = new();
+    private List<FileAccessDto> sharedFiles = new();
     private bool isAddUserModalOpen = false;
     private bool isActionsModalOpen = false;
     private int selectedFileId;
     private string newUserEmail = string.Empty;
     private List<ActivityLogDto> activities = new();
     private string selectedDocument = string.Empty;
+    private int loggedUserId;
 
     protected override async Task OnInitializedAsync()
     {
         try {
             isLoading = true;
-            int userId = await TokenService.GetLoggedInUserIdAsync();
-            files = (await FileService.GetFilesForUserAsync(userId)).ToList();
+            loggedUserId = await TokenService.GetLoggedInUserIdAsync();
+            files = (await FileService.GetFilesForUserAsync(loggedUserId)).ToList();
+
+            var userEmail = (await UserService.GetUserByIdAsync(loggedUserId)).Email;
+            sharedFiles = (await FileAccessService.GetFileAccessesForUser(email: userEmail, loggedUserId)).ToList();
         } catch (Exception ex) {
             isError = true;
             message = ex.Message;
@@ -162,6 +196,8 @@
         var fileUri = $"api/files/download?encryptedUrl={Uri.EscapeDataString(encryptedUrl)}";
 
         await JS.InvokeVoidAsync("triggerFileDownload", fileUri);
+
+        await ActivityLogService.LogActivity(loggedUserId, fileId, ActivityLogEnum.Download); // activity log
     }
 
     private void OpenAddUserModal(int fileId)
@@ -205,7 +241,18 @@
     {
         try {
             isLoading = true;
-            // logika za dodavanje
+            if (string.IsNullOrEmpty(newUserEmail) || !IsValidEmail(newUserEmail)) {
+                throw new Exception("Email korisnika nije važeći!");
+            }
+            if (selectedFileId == 0) {
+                throw new Exception("Nije odabrana datoteka za dodavanje korisnika.");
+            }
+            bool isSuccess = await FileAccessService.AddFileAccessAsync(selectedFileId, newUserEmail.ToLower());
+            if (!isSuccess) {
+                throw new Exception("Greška prilikom dodavanja prava pristupa korisniku!");
+            }
+
+            await ActivityLogService.LogActivity(loggedUserId, selectedFileId, ActivityLogEnum.ShareAccess); // activity log
             message = "Korisnik uspješno dodan.";
             isError = false;
         } catch (Exception ex) {
@@ -214,6 +261,16 @@
         } finally {
             isLoading = false;
             CloseAddUserModal();
+        }
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        } catch {
+            return false;
         }
     }
 }

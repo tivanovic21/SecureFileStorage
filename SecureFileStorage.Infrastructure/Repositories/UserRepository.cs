@@ -28,7 +28,7 @@ namespace SecureFileStorage.Infrastructure.Repositories
 
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _dbContext.User!.FirstOrDefaultAsync(u => u.Id == id);
+            return await _dbContext.User!.Include(a => a.UserType).FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<bool> UserExistsAsync(string email)

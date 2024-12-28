@@ -9,7 +9,6 @@ public class User
     public int UserTypeId {get; set;}
     
     public virtual ICollection<File> UploadedFiles { get; set; } = new List<File>();
-    public virtual ICollection<FileAccess> FileAccesses { get; set; } = new List<FileAccess>();
     public virtual ICollection<ActivityLog> Activities { get; set; } = new List<ActivityLog>();
     public virtual UserType UserType { get; set; } = null!;
 }

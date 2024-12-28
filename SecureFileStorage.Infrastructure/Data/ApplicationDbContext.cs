@@ -22,15 +22,19 @@ public class ApplicationDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<Core.Entities.FileAccess>()
-            .HasKey(fa => new { fa.FileId, fa.UserEmail });
+        modelBuilder.Entity<Core.Entities.FileAccess>(entity =>
+        {
+            entity.HasKey(fa => new { fa.FileId, fa.UserEmail });
 
-        modelBuilder.Entity<Core.Entities.FileAccess>()
-            .HasOne(fa => fa.User)
-            .WithMany(u => u.FileAccesses)
-            .HasPrincipalKey(u => new { u.Id, u.Email })
-            .HasForeignKey(fa => new { fa.UserId, fa.UserEmail })
-            .IsRequired(false);
+            entity.HasOne(fa => fa.File)
+                .WithMany(f => f.FileAccesses)
+                .HasForeignKey(fa => fa.FileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(fa => fa.UserId)
+                .HasColumnName("UserId") 
+                .IsRequired(false); 
+        });
 
         modelBuilder.Entity<UserType>().HasData(
             new UserType { Id = 1, Name = "Admin" },

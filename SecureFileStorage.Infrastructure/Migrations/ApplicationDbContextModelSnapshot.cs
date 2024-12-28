@@ -93,12 +93,11 @@ namespace SecureFileStorage.Infrastructure.Migrations
                     b.Property<DateTime>("GrantedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("UserId");
 
                     b.HasKey("FileId", "UserEmail");
-
-                    b.HasIndex("UserId", "UserEmail");
 
                     b.ToTable("FileAccess");
                 });
@@ -201,14 +200,7 @@ namespace SecureFileStorage.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecureFileStorage.Core.Entities.User", "User")
-                        .WithMany("FileAccesses")
-                        .HasForeignKey("UserId", "UserEmail")
-                        .HasPrincipalKey("Id", "Email");
-
                     b.Navigation("File");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SecureFileStorage.Core.Entities.User", b =>
@@ -232,8 +224,6 @@ namespace SecureFileStorage.Infrastructure.Migrations
             modelBuilder.Entity("SecureFileStorage.Core.Entities.User", b =>
                 {
                     b.Navigation("Activities");
-
-                    b.Navigation("FileAccesses");
 
                     b.Navigation("UploadedFiles");
                 });

@@ -26,13 +26,12 @@ CREATE TABLE IF NOT EXISTS File (
 
 CREATE TABLE IF NOT EXISTS FileAccess (
     fileId INTEGER NOT NULL,
-    userId INTEGER,
+    userId INTEGER NULL,
     userEmail TEXT NOT NULL,
     accessLevel TEXT,
     grantedAt TEXT NOT NULL,
     PRIMARY KEY (fileId, userEmail),
-    FOREIGN KEY (fileId) REFERENCES File(id) ON DELETE CASCADE,
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE
+    FOREIGN KEY (fileId) REFERENCES File(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ActivityLog (
