@@ -4,7 +4,7 @@ using SecureFileStorage.Core.Dtos;
 using SecureFileStorage.Core.Interfaces;
 using File = SecureFileStorage.Core.Entities.File;
 
-namespace SecureFileStorage.Infrastructure.Services 
+namespace SecureFileStorage.Infrastructure.Services
 {
     public class FileService : IFileService
     {
@@ -36,9 +36,12 @@ namespace SecureFileStorage.Infrastructure.Services
 
                 var publicKeyString = Convert.ToBase64String(rsa.ExportRSAPublicKey());
 
+                fileStream.Position = 0;
                 using var sha256 = SHA256.Create();
                 var fileHash = await ComputeHashAsync(fileStream, sha256);
                 var fileHashString = Convert.ToBase64String(fileHash);
+                Console.WriteLine($"Upload file hash: {fileHashString}");
+                fileStream.Position = 0;
 
                 var dataToSign = Encoding.UTF8.GetBytes($"{fileName}{userId}{fileHashString}{uploadTimestamp:O}");
                 var signedData = rsa.SignData(dataToSign, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
@@ -57,18 +60,26 @@ namespace SecureFileStorage.Infrastructure.Services
                 throw new Exception("Dokument ne sadrži valjane podatke za provjeru digitalnog potpisa!");
             }
 
-            var (fileStream, fileName) = await _fileStorageService.DownloadFileAsync(file.EncryptedUrl);
+            var fileStream = await _fileStorageService.GetFileStream(file.EncryptedUrl);
+
 
             using var sha256 = SHA256.Create();
             var fileHash = await ComputeHashAsync(fileStream, sha256);
             var fileHashString = Convert.ToBase64String(fileHash);
 
-            var dataToVerify = Encoding.UTF8.GetBytes($"{fileName}{file.UploaderId}{fileHashString}{file.UploadedAt:O}");
+            var dataToVerify = Encoding.UTF8.GetBytes($"{file.FileName}{file.UploaderId}{fileHashString}{file.UploadedAt:O}");
 
             var signature = Convert.FromBase64String(file.Signature);
             var publicKey = Convert.FromBase64String(file.PublicKey);
 
-            using var rsa = new RSACryptoServiceProvider();
+            Console.WriteLine($"FileStream: {fileStream.Length}");
+            Console.WriteLine($"Data to Verify (String): {Encoding.UTF8.GetString(dataToVerify)}");
+            Console.WriteLine($"Decoded Signature: {Convert.ToBase64String(signature)}");
+            Console.WriteLine($"Decoded PublicKey: {Convert.ToBase64String(publicKey)}");
+            Console.WriteLine($"File Hash String: {fileHashString}");
+            Console.WriteLine($"UploadedAt: {file.UploadedAt:O}");
+
+            using var rsa = new RSACryptoServiceProvider(2048);
             try
             {
                 rsa.ImportRSAPublicKey(publicKey, out _);

@@ -61,6 +61,13 @@ namespace SecureFileStorage.Infrastructure.Services
             }
         }
 
+        public async Task<Stream> GetFileStream(string encryptedUrl)
+        {
+            var (fileStream, _) = await DownloadFileAsync(encryptedUrl);
+            fileStream.Position = 0;
+            return fileStream;
+        }
+
         public async Task<string> UploadFileAsync(Stream fileStream, string fileName, int userId)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);

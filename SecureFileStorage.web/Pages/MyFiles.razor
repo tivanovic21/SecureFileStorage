@@ -214,6 +214,7 @@
                 isError = true;
                 message = "Potpis nije valjan.";
             }
+            await ActivityLogService.LogActivity(loggedUserId, fileId, ActivityLogEnum.ValidateDigitalSignature); // activity log
         } catch (Exception ex) {
             isError = true;
             message = $"Greška prilikom provjere potpisa {ex.Message}";

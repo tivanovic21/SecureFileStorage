@@ -7,5 +7,6 @@ namespace SecureFileStorage.Infrastructure.Enums
         public const string Download = "Download";
         public const string Delete = "Delete";
         public const string ShareAccess = "Share Access";
+        public const string ValidateDigitalSignature = "Validate Digital Signature";
     }
 }
