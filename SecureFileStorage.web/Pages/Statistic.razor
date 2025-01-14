@@ -1,0 +1,407 @@
+﻿@page "/statistic"
+
+@using SecureFileStorage.Core.Dtos
+@using SecureFileStorage.Core.Interfaces
+@using SecureFileStorage.Web.Services
+@using SecureFileStorage.Infrastructure.Enums
+
+@inject ITokenService TokenService
+@inject IFileService FileService
+@inject IActivityLogService ActivityLogService
+@inject IFileStorageService FileStorageService
+@inject IFileAccessService FileAccessService
+@inject IUserService UserService
+@inject IJSRuntime JS
+
+<div class="container mt-4">
+    @if (isLoading)
+    {
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Učitavanje...</span>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isError ? "alert-danger" : "alert-success") mt-3" role="alert">
+            @message
+        </div>
+    }
+</div>
+
+<div class="container mt-4">
+    <h3>Zapisnik aktivnosti</h3>
+    <select>
+        <option value="user">User</option>
+    </select>
+    <select>
+        <option value="">Action Type</option>
+        <option value="Upload">Upload</option>
+        <option value="Share Access">Share Access</option>
+        <option value="Download">Download</option>
+        <option value="Validate Digital Signature">Validate Digital Signature</option>
+    </select>
+    <select @onchange="OrderBy">
+        <option value="orderbyNameAsc">Name Ascending</option>
+        <option value="orderbyNameDesc">Name Descending</option>
+        <option value="orderbyTimeAsc">Time Ascending</option>
+        <option value="orderbyTimeDesc">Time Descending</option>
+        <option value="orderbyFileNameDesc">FileName Descending</option>
+        <option value="orderbyFileNameAsc">FileName Ascending</option>
+    </select>
+    @if (activities != null && activities.Any())
+    {
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Izvršitelj akcije</th>
+                    <th>Tip akcije</th>
+                    <th>Vrijeme akcije</th>
+                    <th>Ime dokumenta</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var activity in activities)
+                {
+                    <tr>
+                        <td>@activity.User.Email</td>
+                        <td>@activity.Action</td>
+                        <td>@activity.Timestamp.ToString("dd/MM/yyyy HH:mm")</td>
+                        @if(activity.File != null)
+                        {
+                            <td>@activity.File.FileName</td>
+                        }else{
+                            <td>Non file action</td>
+                        }
+                        <td>
+                            @* <button class="btn btn-primary btn-sm me-2" @onclick="async () => DownloadFile(file.Id)">Preuzmi</button> *@
+                            @* <button class="btn btn-secondary btn-sm me-2" @onclick="async () => OpenAddUserModal(file.Id)">Dodaj pravo pristupa</button> *@
+                            @* <button class="btn btn-secondary btn-sm" @onclick="async () => OpenActionsModal(file.Id)">Vidi akcije</button> *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    } else if (!isLoading)
+    {
+        <p>Nemate vlastitih datoteka.</p>
+    }
+
+    @if (sharedFiles != null && sharedFiles.Any())
+    {
+        <h3 class="mt-5">Datoteke podijeljene sa mnom</h3>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Ime dokumenta</th>
+                    <th>Vrijeme prijenosa</th>
+                    <th>Vlasnik dokumenta</th>
+                    <th>Akcije</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sharedFile in sharedFiles)
+                {
+                    <tr>
+                        <td>@(sharedFile.File?.FileName ?? "N/A")</td>
+                        <td>@(sharedFile.File?.UploadedAt.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                        <td>@(sharedFile.File?.Uploader?.Email ?? "N/A")</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" @onclick="async () => DownloadFile(sharedFile.FileId)">Preuzmi</button>
+                            <button class="btn btn-primary btn-sm" @onclick="async () => ValidateDigitalSignature(sharedFile.FileId)">Provjeri autentičnost dokumenta</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (isAddUserModalOpen)
+    {
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Dodaj pravo pristupa korisniku</h5>
+                        <button type="button" class="btn-close" @onclick="CloseAddUserModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@newUserEmail" OnValidSubmit="AddUserToFile">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="form-group">
+                                <label for="userEmail">Korisnikov email</label>
+                                <InputText id="userEmail" class="form-control" placeholder="primjer@email.com" @bind-Value="newUserEmail" />
+                            </div>
+                        </EditForm>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CloseAddUserModal">Odustani</button>
+                        <button class="btn btn-primary" @onclick="AddUserToFile">Dodaj korisnika</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    }
+
+    @if (isActionsModalOpen)
+    {
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Akcije za dokument @selectedDocument</h5>
+                        <button type="button" class="btn-close" @onclick="CloseActionsModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (activities != null && activities.Any())
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Korisnik</th>
+                                        <th>Akcija</th>
+                                        <th>Vrijeme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var activity in activities)
+                                    {
+                                        <tr>
+                                            <td>@activity.User.Email</td>
+                                            <td>@activity.Action</td>
+                                            <td>@activity.Timestamp.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        } else
+                        {
+                            <p>Nema aktivnosti za prikazati.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    }
+
+</div>
+
+@code {
+    private bool isLoading = false;
+    private bool isError = false;
+    private string message;
+    private List<FileDto> files = new();
+    private List<FileAccessDto> sharedFiles = new();
+    private bool isAddUserModalOpen = false;
+    private bool isActionsModalOpen = false;
+    private int selectedFileId;
+    private string newUserEmail = string.Empty;
+    private List<ActivityLogDto> activities = new();
+    private string selectedDocument = string.Empty;
+    private int loggedUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+            loggedUserId = await TokenService.GetLoggedInUserIdAsync();
+            activities = (await ActivityLogService.GetAllActivityLogs()).ToList();
+
+            var userEmail = (await UserService.GetUserByIdAsync(loggedUserId)).Email;
+            sharedFiles = (await FileAccessService.GetFileAccessesForUser(email: userEmail, loggedUserId)).ToList();
+        } catch (Exception ex)
+        {
+            isError = true;
+            message = ex.Message;
+        } finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async void DownloadFile(int fileId)
+    {
+        var fileData = await FileService.GetFileAsync(fileId);
+        var encryptedUrl = fileData.EncryptedUrl;
+        var fileUri = $"api/files/download?encryptedUrl={Uri.EscapeDataString(encryptedUrl)}";
+
+        await JS.InvokeVoidAsync("triggerFileDownload", fileUri);
+
+        await ActivityLogService.LogActivity(loggedUserId, fileId, ActivityLogEnum.Download); // activity log
+    }
+
+    private async void OrderBy(ChangeEventArgs e)
+    {
+        switch (e.Value)
+        {
+            case "orderbyNameAsc":
+                activities = activities.OrderBy(a => a.User.Email).ToList();
+                break;
+            case "orderbyNameDesc":
+                activities = activities.OrderByDescending(a => a.User.Email).ToList();
+                break;
+            case "orderbyTimeAsc":
+                activities = activities.OrderBy(a => a.Timestamp).ToList();
+                break;
+            case "orderbyTimeDesc":
+                activities = activities.OrderByDescending(a => a.Timestamp).ToList();
+                break;
+            case "orderbyFileNameAsc":
+                activities = activities.OrderBy(a => a.File?.FileName).ToList();
+                break;
+            case "orderbyFileNameDesc":
+                activities = activities.OrderByDescending(a => a.File?.FileName).ToList();
+                break;
+            default:
+                break;
+        }
+        StateHasChanged();
+    }
+
+    private async Task ValidateDigitalSignature(int fileId)
+    {
+        isLoading = true;
+        isError = false;
+        message = string.Empty;
+        try
+        {
+            var isValid = await FileService.ValidateDigitalSignature(fileId);
+            if (isValid)
+            {
+                message = "Potpis je valjan.";
+            } else
+            {
+                isError = true;
+                message = "Potpis nije valjan.";
+            }
+            await ActivityLogService.LogActivity(loggedUserId, fileId, ActivityLogEnum.ValidateDigitalSignature); // activity log
+        } catch (Exception ex)
+        {
+            isError = true;
+            message = $"Greška prilikom provjere potpisa {ex.Message}";
+        } finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OpenAddUserModal(int fileId)
+    {
+        selectedFileId = fileId;
+        isAddUserModalOpen = true;
+    }
+
+    private void CloseAddUserModal()
+    {
+        isAddUserModalOpen = false;
+        newUserEmail = string.Empty;
+    }
+
+    private async void OpenActionsModal(int fileId)
+    {
+        await GetActivityLogsForFile(fileId);
+        selectedDocument = files.First(f => f.Id == fileId).FileName;
+        isActionsModalOpen = true;
+    }
+
+    private void CloseActionsModal()
+    {
+        isActionsModalOpen = false;
+    }
+
+    private async Task GetActivityLogsForFile(int fileId)
+    {
+        try
+        {
+            isLoading = true;
+            activities = (await ActivityLogService.GetActivityLogsForFile(fileId)).ToList();
+        } catch (Exception ex)
+        {
+            isError = true;
+            message = ex.Message;
+        } finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task AddUserToFile()
+    {
+        try
+        {
+            isLoading = true;
+            if (string.IsNullOrEmpty(newUserEmail) || !IsValidEmail(newUserEmail))
+            {
+                throw new Exception("Email korisnika nije važeći!");
+            }
+            if (selectedFileId == 0)
+            {
+                throw new Exception("Nije odabrana datoteka za dodavanje korisnika.");
+            }
+            bool isSuccess = await FileAccessService.AddFileAccessAsync(selectedFileId, newUserEmail.ToLower());
+            if (!isSuccess)
+            {
+                throw new Exception("Greška prilikom dodavanja prava pristupa korisniku!");
+            }
+
+            await ActivityLogService.LogActivity(loggedUserId, selectedFileId, ActivityLogEnum.ShareAccess); // activity log
+            message = "Korisnik uspješno dodan.";
+            isError = false;
+        } catch (Exception ex)
+        {
+            isError = true;
+            message = ex.Message;
+        } finally
+        {
+            isLoading = false;
+            CloseAddUserModal();
+        }
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        } catch
+        {
+            return false;
+        }
+    }
+}
+
+<script>
+    async function triggerFileDownload(fileUrl) {
+        const response = await fetch(fileUrl);
+        if (!response.ok) {
+            console.error('Failed to download file: ', response.statusText);
+            return;
+        }
+
+        const disposition = response.headers.get('Content-Disposition');
+        let fileName = 'file';
+        if (disposition && disposition.includes('filename=')) {
+            const fileNameMatch = disposition.match(/filename="?([^"]+)"?/);
+            if (fileNameMatch && fileNameMatch[1]) {
+                fileName = fileNameMatch[1];
+            }
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    }
+</script>
