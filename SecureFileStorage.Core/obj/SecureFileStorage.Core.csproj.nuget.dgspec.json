@@ -1,26 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj": {}
+    "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj": {}
   },
   "projects": {
-    "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj": {
+    "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+        "projectUniqueName": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
         "projectName": "SecureFileStorage.Core",
-        "projectPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
-        "packagesPath": "/Users/toniivanovic/.nuget/packages/",
-        "outputPath": "/Users/toniivanovic/Desktop/sis/SecureFileStorage/SecureFileStorage.Core/obj/",
+        "projectPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
+        "packagesPath": "C:\\Users\\jakov\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\jakov\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -69,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -28,5 +28,13 @@ namespace SecureFileStorage.Infrastructure.Repositories
                 .Where(a => a.FileId == fileId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<ActivityLog>> GetAllActivityLogs()
+        {
+            return await _dbContext.ActivityLog!
+                .Include(a => a.User)
+                .Include(a => a.File)
+                .ToListAsync();
+        }
     }
 }

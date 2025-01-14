@@ -6,5 +6,6 @@ namespace SecureFileStorage.Core.Interfaces
     {
         Task LogActivity(int userId, int fileId, string message);
         Task<IEnumerable<ActivityLogDto>> GetActivityLogsForFile(int fileId);
+        Task<IEnumerable<ActivityLogDto>> GetAllActivityLogs();
     }
 }

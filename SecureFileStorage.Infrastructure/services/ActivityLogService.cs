@@ -19,6 +19,12 @@ namespace SecureFileStorage.Infrastructure.Services
             return logs.Select(MapActivityLogToDto).ToList();
         }
 
+        public async Task<IEnumerable<ActivityLogDto>> GetAllActivityLogs()
+        {
+            var logs = await _activityLogRepository.GetAllActivityLogs();
+            return logs.Select(MapActivityLogToDto).ToList();
+        }
+
         public async Task LogActivity(int userId, int fileId, string message)
         {
             var activityLog = new ActivityLog
@@ -41,6 +47,7 @@ namespace SecureFileStorage.Infrastructure.Services
                 Action = activityLog.Action,
                 Timestamp = activityLog.Timestamp,
                 User = activityLog.User ?? null,
+                File = activityLog.File ?? null
             };
         }
     }
