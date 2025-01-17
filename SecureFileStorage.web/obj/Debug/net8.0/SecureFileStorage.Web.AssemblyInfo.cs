@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecureFileStorage.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f257887a1ddd1783bbdf6d8399eeb7ce1668ca40")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+feb5c49e39bc4bc2884484d45431975723e2cfd9")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecureFileStorage.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecureFileStorage.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
