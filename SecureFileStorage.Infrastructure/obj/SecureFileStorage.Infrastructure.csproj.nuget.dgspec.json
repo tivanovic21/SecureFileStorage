@@ -1,32 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Infrastructure\\SecureFileStorage.Infrastructure.csproj": {}
+    "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj": {
+    "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
+        "projectUniqueName": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
         "projectName": "SecureFileStorage.Core",
-        "projectPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
-        "packagesPath": "C:\\Users\\jakov\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\obj\\",
+        "projectPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+        "packagesPath": "/Users/toniivanovic/.nuget/packages/",
+        "outputPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\jakov\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -75,41 +69,35 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Infrastructure\\SecureFileStorage.Infrastructure.csproj": {
+    "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Infrastructure\\SecureFileStorage.Infrastructure.csproj",
+        "projectUniqueName": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj",
         "projectName": "SecureFileStorage.Infrastructure",
-        "projectPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Infrastructure\\SecureFileStorage.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\jakov\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Infrastructure\\obj\\",
+        "projectPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Infrastructure/SecureFileStorage.Infrastructure.csproj",
+        "packagesPath": "/Users/toniivanovic/.nuget/packages/",
+        "outputPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Infrastructure/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\jakov\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj": {
-                "projectPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj"
+              "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj": {
+                "projectPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj"
               }
             }
           }
@@ -172,7 +160,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

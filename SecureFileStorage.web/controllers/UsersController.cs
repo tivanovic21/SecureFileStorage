@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,22 @@ public class UsersController: ControllerBase {
     public UsersController(IUserRepository userRepository, ITokenService tokenService) {
         _userRepository = userRepository;
         _tokenService = tokenService;
+    }
+
+    
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            var userDtos = users.Select(MapToUserDto).ToList();
+            return Ok(userDtos);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("register")]
@@ -67,5 +84,18 @@ public class UsersController: ControllerBase {
 
     private bool VerifyPassword(string password, string passwordHash) {
         return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+    }
+
+    private UserDto MapToUserDto(User user)
+    {
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            UserTypeId = user.UserTypeId,
+            CreatedAt = user.CreatedAt,
+            LastLogin = user.LastLogin,
+            UserType = user.UserType
+        };
     }
 }

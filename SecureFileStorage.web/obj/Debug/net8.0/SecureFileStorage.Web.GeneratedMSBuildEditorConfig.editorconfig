@@ -9,63 +9,67 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SecureFileStorage.Web
 build_property.RootNamespace = SecureFileStorage.Web
-build_property.ProjectDir = C:\Users\jakov\Desktop\Faks\7Semestar(IPI)\SIS\projekt\SecureFileStorage\SecureFileStorage.Web\
+build_property.ProjectDir = /Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Web/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\jakov\Desktop\Faks\7Semestar(IPI)\SIS\projekt\SecureFileStorage\SecureFileStorage.Web
+build_property.MSBuildProjectDirectory = /Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Web
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/App.razor]
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Index.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/AllUsers.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWxsVXNlcnMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/MyFiles.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlGaWxlcy5yYXpvcg==
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Register.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/MyFiles.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTXlGaWxlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Statistic.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhdGlzdGljLnJhem9y
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Upload.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBsb2FkLnJhem9y
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Statistic.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3RhdGlzdGljLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Shared/SurveyPrompt.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Upload.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVXBsb2FkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/_Imports.razor]
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Shared/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-7tr11xjn4k
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-mr04oiqa7y
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Shared/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-eluxz5bz3q
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-47kmh8koyi
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/jakov/Desktop/Faks/7Semestar(IPI)/SIS/projekt/SecureFileStorage/SecureFileStorage.Web/Pages/_Host.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+[/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.web/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

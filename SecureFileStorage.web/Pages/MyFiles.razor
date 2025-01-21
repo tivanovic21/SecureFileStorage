@@ -301,7 +301,14 @@
 
 <script>
     async function triggerFileDownload(fileUrl) {
-        const response = await fetch(fileUrl);
+        const jwtToken = localStorage.getItem('authToken');
+        const response = await fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        });
+        
         if (!response.ok) {
             console.error('Failed to download file: ', response.statusText);
             return;

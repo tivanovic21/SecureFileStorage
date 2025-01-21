@@ -9,10 +9,9 @@
 @inject ITokenService TokenService
 @inject IFileService FileService
 @inject IActivityLogService ActivityLogService
-@inject IFileStorageService FileStorageService
 @inject IFileAccessService FileAccessService
 @inject IUserService UserService
-@inject IJSRuntime JS
+@inject NavigationManager Navigation
 
 <div class="container mt-4">
     @if (isLoading)
@@ -110,6 +109,7 @@
     private List<User> Users;
     private string SelectedUser;
     private List<ActivityLogDto> FilteredActivities;
+    private bool isAdmin = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -118,6 +118,10 @@
         {
             isLoading = true;
             loggedUserId = await TokenService.GetLoggedInUserIdAsync();
+            isAdmin = await TokenService.UserIsAdmin(loggedUserId);
+            
+            if (!isAdmin) Navigation.NavigateTo("/");
+            
             activities = (await ActivityLogService.GetAllActivityLogs()).ToList();
 
             Users = activities.Select(a => a.User).Distinct().ToList();

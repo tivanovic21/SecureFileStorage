@@ -1276,32 +1276,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jakov\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/toniivanovic/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
+      "projectUniqueName": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
       "projectName": "SecureFileStorage.Core",
-      "projectPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\SecureFileStorage.Core.csproj",
-      "packagesPath": "C:\\Users\\jakov\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jakov\\Desktop\\Faks\\7Semestar(IPI)\\SIS\\projekt\\SecureFileStorage\\SecureFileStorage.Core\\obj\\",
+      "projectPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/SecureFileStorage.Core.csproj",
+      "packagesPath": "/Users/toniivanovic/.nuget/packages/",
+      "outputPath": "/Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\jakov\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/toniivanovic/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1350,7 +1343,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

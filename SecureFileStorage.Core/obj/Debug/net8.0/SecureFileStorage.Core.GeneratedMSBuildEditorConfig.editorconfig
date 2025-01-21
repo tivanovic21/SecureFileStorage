@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SecureFileStorage.Core
-build_property.ProjectDir = C:\Users\jakov\Desktop\Faks\7Semestar(IPI)\SIS\projekt\SecureFileStorage\SecureFileStorage.Core\
+build_property.ProjectDir = /Users/toniivanovic/RiderProjects/SecureFileStorage/SecureFileStorage.Core/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

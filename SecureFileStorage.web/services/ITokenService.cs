@@ -8,5 +8,6 @@ namespace SecureFileStorage.Web.Services
         Task<int> GetLoggedInUserIdAsync();
         Task<User?> GetLoggedInUser(int id);
         Task<bool> UserIsAdmin(int id);
+        Task<string> GetToken();
     }
 }

@@ -1,0 +1,77 @@
+@page "/allusers"
+@using SecureFileStorage.Core.Dtos
+@using SecureFileStorage.Web.Services
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ITokenService TokenService
+
+<h3>All Users</h3>
+
+@if (users == null)
+{
+    <p>Loading users...</p>
+}
+else if (!users.Any())
+{
+    <p>No users found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created At</th>
+            <th>Last Login</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Email</td>
+                <td>@user.UserType.Name</td>
+                <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@user.LastLogin.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<UserDto>? users;
+    private bool isAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var id = await TokenService.GetLoggedInUserIdAsync();
+            isAdmin = await TokenService.UserIsAdmin(id);
+            
+            if (!isAdmin) Navigation.NavigateTo("/");
+            
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/users/all");
+            var token = await TokenService.GetToken();
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to fetch users: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}

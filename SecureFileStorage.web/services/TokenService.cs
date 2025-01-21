@@ -42,7 +42,9 @@ namespace SecureFileStorage.Web.Services
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", userId.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(_authSettings.ExpirationMinutes),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = _authSettings.Issuer,
+                Audience = _authSettings.Audience
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -78,6 +80,16 @@ namespace SecureFileStorage.Web.Services
         public async Task<bool> UserIsAdmin(int id)
         {
             return await _userRepository.UserIsAdminAsync(id);
+        }
+
+        public async Task<string> GetToken()
+        {
+            var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", new object[] { "authToken" });
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new InvalidOperationException("Token not found.");
+            }
+            return token;
         }
 
         private string? GetUserIdFromToken(string token)

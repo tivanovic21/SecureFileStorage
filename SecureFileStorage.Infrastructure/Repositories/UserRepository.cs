@@ -21,6 +21,11 @@ namespace SecureFileStorage.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _dbContext.User!.Include(u => u.UserType).ToListAsync();
+        }
+
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _dbContext.User!.FirstOrDefaultAsync(u => u.Email == email);
